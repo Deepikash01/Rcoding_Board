@@ -1,0 +1,140 @@
+---
+title: "Assignment"
+author: "Group 1"
+date: '2022-04-09'
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+#1. Print the structure of your dataset
+# we use a built-in function called str()
+str (superdata)
+
+## 2. List the variables in your dataset 
+## we user ls() function to find all variables by passing data set name.
+
+ls(superdata)
+
+#3. Print the top 15 rows of your dataset 
+## Select top n rows
+
+my_data <- as_tibble(superdata)
+Top_15_rows<-my_data %>% slice(1:15)
+# 4. Write a user defined function using any of the variables from the data set. 
+# We will be finding sqaure on quantity by creating a user defined function
+userDefinedFunction <- function(x){
+  result <- x ^2
+  print(result)
+}
+x <- superdata$`Quantity`
+userDefinedFunction(x)
+square_of_Unit_Price<-userDefinedFunction(x)
+
+
+# 5. Use data manipulation techniques and filter rows based on any logical criteria that exist in your dataset.
+# as we have more 500 data objects as output we will be prinitng only 3 rows
+filtered <- filter(superdata, Gender == "Female" )
+print(filtered)
+# as we have more 500 data objects as output we will be prinitng only 3 rows
+filtered <- filter(superdata, Gender == "Female" )
+head(filtered,3)
+
+# 6. Identify the dependent & independent variables and use reshaping techniques and create a new data frame by joining those variables from your dataset.
+
+Dependent <- data.frame(superdata[,(colnames(superdata) %in% c("Unit.price","Quantity","Tax.5.","Total","cogs","gross.margin.percentage","gross.income","Rating"))])
+Independent <- data.frame(superdata[,(colnames(superdata) %in% c("Invoice.ID","Branch","City","Customer.type","Gender","Product.line","Date","Time","Payment"))])
+# 7. Remove missing values in your dataset.
+# we will be using omit() in built function as this most efficent way to remove missing data.
+datacollected <- superdata
+Completerecords <- na.omit(datacollected)
+
+# 8. Identify and remove duplicated data in your dataset 
+
+duplicated(superdata)
+
+sum(duplicated(superdata))
+# as we dont have any duplicate data in spuper data we will applying this techniq to Irirs which is predinfed data in R studio
+# we found some duplicate data
+superdata1<-superdata
+duplicated(superdata)
+# will try to find the count of duplicate data
+sum(duplicated(iris))
+
+# using distinct in built function to extract unique values.
+uniresult<- superdata
+uniquedata <-distinct(uniresult)
+# 9.Reorder multiple rows in descending order
+Descendin <- superdata %>% arrange(desc(Rating), desc(`gross income`))
+print(Descendin)
+# 10. Rename some of the column names in your dataset 
+# will be using rename simple way even though we have colname() which are little complex built in function to do this will convert Branch to BRANCH. and assign it to RENAMEE
+
+RENAMEE <- rename(superdata, BRANCH = Branch)
+##11.	Add new variables in your data frame by using a mathematical function (for e.g. – multiply an existing column by 2 and add it as a new variable to your data frame) 
+df2Quantity <- superdata
+df2Quantity$Quantity.2<- df2Quantity$Quantity*2
+df2Quantity
+# 12. Create a training set using random number generator engine. 
+superdatar<- superdata
+str (superdatar)
+
+h<- runif(nrow(superdata))
+superdatar<- superdata[order(h), ]
+#install Smicd package to set constnat order for new data thaty will be divided into train and test sets.
+set.seed(123)
+
+str (superdatar)
+train<- superdatar[1:900,]
+test<- superdatar[901:1000,]
+str(train)
+str(test)
+
+# 13.Print the summary statistics of your dataset 
+Summaryofsatistics <- (summary(superdata))
+print (Summaryofsatistics)
+# 14. mean mode median Range we use mean and median in-built functions 
+# as we R doesnt have mode we will be writing user defind function to indentify mode
+# we use use in buitl function like mode mean median 
+median(superdata$`Unit price`)
+mean(superdata$`Unit price`)
+
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+v <- superdata$`Unit price`
+result <- getmode(v)
+print(result)
+
+# Range maximum minus minumum values
+print(max(superdata$`Unit price`, na.rm=TRUE)-min(superdata$`Unit price`, na.rm=TRUE))
+# 15.Plot a scatter plot for any 2 variables in your dataset 
+plot(superdata$`Rating`,superdata$`Unit price`, xlab = "Rating", ylab = "unit price", col = "red")
+
+#16. Plot a bar plot for any 2 variables in your dataset 
+plot(superdata$`Rating`,superdata$`Unit price`, xlab = "Rating ", ylab = "unit price", type = "h", col = "blue")
+
+# 17.Find the correlation between any 2 variables by applying least square linear regression model
+ 
+ggplot(data=superdata, aes(x=Quantity, y= Rating)) +
+geom_point(color="red") + labs(y="Rating") +
+geom_smooth(method='lm', se=FALSE)
+
+cor(superdata$Quantity, superdata$Rating, method="pearson")
+
+```
+
+
+```
+
+ple:
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
